@@ -16,8 +16,8 @@ def _cart_id(request):
 # Create function add_cart
 def add_cart(request,product_id):
     color = request.GET['color']
-    size = request.GET['size']
-    return HttpResponse(color + ' ' + size )
+    # size = request.GET['size']
+    return HttpResponse(color)
     exit()
     # Get the product
     product = Product.objects.get(id=product_id)
