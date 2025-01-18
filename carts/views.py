@@ -4,7 +4,7 @@ from .models import Cart, CartItem
 from django.core.exceptions import ObjectDoesNotExist
 
 # Create your views here.
-# from django.http import HttpResponse
+from django.http import HttpResponse
 
 # Create functin _cart_id
 def _cart_id(request):
@@ -15,6 +15,10 @@ def _cart_id(request):
 
 # Create function add_cart
 def add_cart(request,product_id):
+    color = request.GET['color']
+    size = request.GET['size']
+    return HttpResponse(color + ' ' + size )
+    exit()
     # Get the product
     product = Product.objects.get(id=product_id)
     try:
