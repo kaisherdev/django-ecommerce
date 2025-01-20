@@ -24,3 +24,13 @@ class RegistrationForm(forms.ModelForm):
         self.fields['phone_number'].widget.attrs['placeholder']='Enter Phone Number'
         for filed in self.fields:
             self.fields[filed].widget.attrs['class']='form-control'
+            
+    def clean(self):
+        cleaned_data = super(RegistrationForm,self).clean()
+        password = cleaned_data.get('password')
+        confirm_password = cleaned_data.get('confirm_password')
+        
+        if password != confirm_password:
+            raise forms.ValidationError(
+                'Password does not match!'
+            )
