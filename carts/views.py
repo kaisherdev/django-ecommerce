@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect,get_object_or_404
 from store.models import Product,Variation
 from .models import Cart, CartItem
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 from django.http import HttpResponse
@@ -33,7 +34,7 @@ def add_cart(request,product_id):
             cart_id = _cart_id(request)
         )
     cart.save()
-    is_cart_variation_exist = CartItem.objects.filter(product=product,cart=cart)
+    is_cart_variation_exist = CartItem.objects.filter(product=product,cart=cart).exists()
     if is_cart_variation_exist:
         cart_item = CartItem.objects.filter(product=product,cart=cart) # Get the cart_item
         # existing_variations -> database
@@ -113,6 +114,7 @@ def cart(request,total=0,quantity=0,cart_items=None):
     }
     return render(request,'store/cart.html',contex)
 
+@login_required(login_url='login')
 def checkout(request,total=0,quantity=0,cart_items=None):
     try:
         tax=0
