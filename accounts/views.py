@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect,get_object_or_404
 import requests
 from .forms import RegistrationForm,UserForm,UserProfileForm
 from .models import Account,UserProfile
-from orders.models import Order
+from orders.models import Order,OrderProduct
 from django.contrib import messages
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
@@ -272,3 +272,17 @@ def change_password(request):
             messages.error(request,'Password does not match!')
             return redirect('change_password')
     return render(request,'accounts/change_password.html')
+
+@login_required(login_url='login')
+def order_detail(request,order_id):
+    order_detail = OrderProduct.objects.filter(order__order_number=order_id)
+    order = Order.objects.get(order_number=order_id)
+    subtotal = 0
+    for i in order_detail:
+        subtotal += i.product_price * i.quantity
+    context = {
+        'order_detail': order_detail,
+        'order':order,
+        'subtotal': subtotal,
+    }
+    return render(request,'accounts/order_detail.html', context)
